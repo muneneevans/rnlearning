@@ -8,32 +8,50 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Animated, Text, TouchableOpacity} from 'react-native';
 
 const App = () => {
-  const value = useState(new Animated.ValueXY({x: 0, y: 0}))[0];
-  function moveBall() {
-    Animated.timing(value, {
-      toValue: {x: 100, y: 100},
+  // (0,0) -> (1,1) -> (2,2) -> (3,3)
+  // 1 Second
+  // 60 frames per second
+
+  const opacity = useState(new Animated.Value(0))[0];
+  function fadeInBall() {
+    Animated.timing(opacity, {
+      toValue: 1,
       duration: 1000,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
   }
+  function fadeOutBall() {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }
+
   return (
-    <View>
-      <Animated.View style={value.getLayout()}>
-        <View
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 100 / 2,
-            backgroundColor: 'red',
-          }}
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View>
+        <Animated.View
+          style={[
+            {
+              width: 100,
+              height: 100,
+              borderRadius: 100 / 2,
+              backgroundColor: 'red',
+              opacity,
+            },
+          ]}
         />
-      </Animated.View>
-      <TouchableOpacity onPress={moveBall}>
-        <Text>Move ball</Text>
+      </View>
+      <TouchableOpacity onPress={fadeInBall}>
+        <Text>Fade in</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={fadeOutBall}>
+        <Text>Fade out</Text>
       </TouchableOpacity>
     </View>
   );

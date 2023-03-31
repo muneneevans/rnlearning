@@ -29,7 +29,12 @@ const App = () => {
           y: pan.y._value,
         });
       },
-      onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
+      onPanResponderMove: (event, gesture) => {
+        // console.log('ARGS', {...args[1]});
+        pan.x.setValue(gesture.dx);
+        pan.y.setValue(gesture.dy);
+      },
+      // onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
       onPanResponderRelease: () => {
         pan.flattenOffset();
       },
@@ -46,11 +51,25 @@ const App = () => {
             width: 100,
             height: 100,
             borderRadius: 100 / 2,
-            // transform: [{translateX: opacity}],
-
             backgroundColor: 'red',
+
+            //
+            //
+            //  THESE 4 implementations yeild the same output
+            //
+
+            // 1
+            transform: [{translateX: pan.x}, {translateY: pan.y}],
+
+            // 2
+            // transform: pan.getTranslateTransform(),
+
+            // 3
+            // top: pan.y,
+            // left: pan.x,
           },
-          pan.getLayout(),
+          // 4
+          // pan.getLayout(),
         ]}
         {...panResponder.panHandlers}
       />

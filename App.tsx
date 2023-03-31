@@ -17,18 +17,10 @@ const App = () => {
   // 60 frames per second
   const leftValue = useState(new Animated.Value(0))[0];
 
-  const opacity = useState(new Animated.Value(0))[0];
-  function fadeInBall() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }
-  function fadeOutBall() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 1000,
+  function moveBall() {
+    Animated.timing(leftValue, {
+      toValue: 500,
+      duration: 5000,
       useNativeDriver: true,
     }).start();
   }
@@ -44,16 +36,12 @@ const App = () => {
               borderRadius: 100 / 2,
               transform: [{translateX: leftValue}],
               backgroundColor: 'red',
-              opacity,
             },
           ]}
         />
       </View>
-      <TouchableOpacity onPress={fadeInBall}>
-        <Text>Fade in</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={fadeOutBall}>
-        <Text>Fade out</Text>
+      <TouchableOpacity onPress={moveBall}>
+        <Text>Move me</Text>
       </TouchableOpacity>
     </View>
   );

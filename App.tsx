@@ -15,6 +15,7 @@ const App = () => {
   // (0,0) -> (1,1) -> (2,2) -> (3,3)
   // 1 Second
   // 60 frames per second
+  const leftValue = useState(new Animated.Value(0))[0];
 
   const opacity = useState(new Animated.Value(0))[0];
   function fadeInBall() {
@@ -41,6 +42,7 @@ const App = () => {
               width: 100,
               height: 100,
               borderRadius: 100 / 2,
+              transform: [{translateX: leftValue}],
               backgroundColor: 'red',
               opacity,
             },

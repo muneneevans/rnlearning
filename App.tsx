@@ -8,53 +8,52 @@
  * @format
  */
 
-import React, {useRef, useState} from 'react';
-import {View, Animated, Text, TouchableOpacity} from 'react-native';
+import React, {useRef} from 'react';
+import {
+  View,
+  Animated,
+  Text,
+  TouchableOpacity,
+  PanResponder,
+} from 'react-native';
 
 const App = () => {
-  // (0,0) -> (1,1) -> (2,2) -> (3,3)
-  // 1 Second
-  // 60 frames per second
-  const opacity = useState(new Animated.Value(0))[0];
+  const pan = useRef(new Animated.ValueXY()).current;
 
-  function fadeInBall() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value,
+        });
+      },
+      onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+      },
+    }),
+  ).current;
 
-  function fadeOutBall() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }
+  console.log(pan.getLayout());
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <View>
-        <Animated.View
-          style={[
-            {
-              width: 100,
-              height: 100,
-              borderRadius: 100 / 2,
-              // transform: [{translateX: opacity}],
-              opacity: opacity,
-              backgroundColor: 'red',
-            },
-          ]}
-        />
-      </View>
-      <TouchableOpacity onPress={fadeInBall}>
-        <Text>Fade in</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={fadeOutBall}>
-        <Text>Fade out</Text>
-      </TouchableOpacity>
+    <View style={{flex: 1}}>
+      <Animated.View
+        style={[
+          {
+            width: 100,
+            height: 100,
+            borderRadius: 100 / 2,
+            // transform: [{translateX: opacity}],
+
+            backgroundColor: 'red',
+          },
+          pan.getLayout(),
+        ]}
+        {...panResponder.panHandlers}
+      />
     </View>
   );
 };
